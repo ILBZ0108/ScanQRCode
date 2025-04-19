@@ -55,23 +55,33 @@ function scanQRCode(stream) {
 
 // 解析二维码中的WiFi信息
 function parseWiFiData(data) {
-    const wifiPattern = /^WIFI:T:(WPA|WEP|);S:([^;]+);P:([^;]+);$/;
-    const match = data.match(wifiPattern);
-
-    if (match) {
-        const encryption = match[1] || '无加密';
-        const ssid = match[2];
-        const password = match[3];
-
-        // 显示WiFi信息
-        wifiSSID.textContent = ssid;
-        wifiPassword.textContent = password;
-        wifiEncryption.textContent = encryption;
-
-        // 显示WiFi信息区域
-        wifiInfo.style.display = 'block';
-    } else {
+    // 判断是不是以 WIFI: 开头
+    if (!data.startsWith("WIFI:")) {
+        qrResult.textContent = "二维码内容不是有效的 WiFi 信息";
         wifiInfo.style.display = 'none';
-        qrResult.textContent = '二维码不包含WiFi信息';
+        return;
     }
+
+    // 移除开头的 WIFI: 和结尾的两个分号
+    const content = data.substring(5).replace(/;;$/, '');
+
+    // 拆分字段
+    const fields = {};
+    content.split(';').forEach(part => {
+        const [key, ...rest] = part.split(':');
+        if (key && rest.length > 0) {
+            fields[key] = rest.join(':'); // 防止SSID或密码中包含冒号
+        }
+    });
+
+    // 读取字段
+    const ssid = fields['S'] || '(未识别)';
+    const password = fields['P'] || '(无密码)';
+    const encryption = fields['T'] || '(未知加密方式)';
+
+    // 显示结果
+    wifiSSID.textContent = ssid;
+    wifiPassword.textContent = password;
+    wifiEncryption.textContent = encryption;
+    wifiInfo.style.display = 'block';
 }
