@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>二维码扫描器</title>
+    <link rel="stylesheet" href="/ScanQRCode/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>二维码扫描器</h1>
+        <p>请扫描WiFi二维码</p>
+        <video id="video" width="100%" height="auto" autoplay></video>
+        <div id="result" class="result">
+            <p>扫描结果:</p>
+            <p id="qrResult">等待扫描...</p>
+        </div>
+        <div id="wifiInfo" class="wifi-info" style="display:none;">
+            <p><strong>账号 (SSID):</strong> <span id="wifiSSID"></span></p>
+            <p><strong>密码:</strong> <span id="wifiPassword"></span></p>
+            <p><strong>加密方式:</strong> <span id="wifiEncryption"></span></p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
+    <script src="/ScanQRCode/script.js"></script>
+</body>
+</html>
